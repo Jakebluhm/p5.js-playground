@@ -14,8 +14,12 @@ let ay = new Array(squares).fill(0); // Acceleration in y-direction
 let trailLength = 10; // Number of trailing squares
 positions = new Array(squares);
 
+let xAccel = 5.0;
+let yAccel = 15.0;
+let accelDecayFactor = -11.0;
+
 function setup() {
-  createCanvas(1920, 910);
+  createCanvas(628, 1200);
   // Initialize x and y to the center of the canvas
   //noStroke();
 
@@ -23,10 +27,12 @@ function setup() {
   r = new Array(squares);
   g = new Array(squares);
   b = new Array(squares);
-
+  x = new Array(squares);
+  y = new Array(squares);
   for (let i = 0; i < squares; i++) {
     squareSizes[i] = random(10, 90);
-
+    x[i] = width / 2 - squareSizes[i] / 2;
+    y[i] = height / 2 - squareSizes[i] / 2;
     // Generates random RGB values
     r[i] = random(255); // Random red value between 0 and 255
     g[i] = random(255); // Random green value between 0 and 255
@@ -34,18 +40,38 @@ function setup() {
 
     positions[i] = new Array(trailLength).fill({ x: width / 2, y: height / 2 });
   }
-  x = new Array(squares).fill(width / 2);
-  y = new Array(squares).fill(height / 2);
+
   frameRate(60); // Optional: Set frame rate for smoother animation
 }
 
 function draw() {
   background(0);
+
+  // Get the elapsed time in milliseconds
+  let elapsedTime = millis();
+
+  // Display elapsed time in seconds
+  textAlign(CENTER);
+  textSize(32);
+  fill(255, 255, 255);
+  text(elapsedTime.toFixed(0) + " ms", width / 2, height / 2);
+
+  console.log(
+    -xAccel * Math.pow(Math.E, accelDecayFactor * (elapsedTime / 1000)),
+    yAccel * Math.pow(Math.E, accelDecayFactor * (elapsedTime / 1000))
+  );
+
   let i = 0;
   for (i; i < squares; i++) {
     // Update acceleration with random values for smoother changes
-    ax[i] = random(-0.99, 0.99);
-    ay[i] = random(-0.99, 0.99);
+    ax[i] = random(
+      -xAccel * Math.pow(Math.E, accelDecayFactor * (elapsedTime / 1000)),
+      xAccel * Math.pow(Math.E, accelDecayFactor * (elapsedTime / 1000))
+    );
+    ay[i] = random(
+      -yAccel * Math.pow(Math.E, accelDecayFactor * (elapsedTime / 1000)),
+      yAccel * Math.pow(Math.E, accelDecayFactor * (elapsedTime / 1000))
+    );
 
     // Update velocity based on acceleration
     vx[i] += ax[i];
