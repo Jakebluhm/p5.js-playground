@@ -74,7 +74,7 @@ function draw() {
     vx[i] += ax[i];
     vy[i] += ay[i];
 
-    vx[i] *= 0.99;
+    vx[i] *= 0.95;
     vy[i] *= 0.99;
     // Limit the velocity to prevent the square from moving too fast
     //vx[i] = constrain(vx[i], -15, 15);
