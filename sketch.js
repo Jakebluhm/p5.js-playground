@@ -14,9 +14,9 @@ let ay = new Array(squares).fill(0); // Acceleration in y-direction
 let trailLength = 3; // Number of trailing squares
 positions = new Array(squares);
 
-let xAccel = 320.0;
-let yAccel = 600.0;
-let accelDecayFactor = -190.0;
+let xAccel = 60.0;
+let yAccel = 120.0;
+let accelDecayFactor = -100.0;
 
 function setup() {
   createCanvas(1080, 1920);
@@ -31,7 +31,7 @@ function setup() {
   x = new Array(squares);
   y = new Array(squares);
   for (let i = 0; i < squares; i++) {
-    squareSizes[i] = random(10, 90);
+    squareSizes[i] = random(20, 100);
     x[i] = width / 2 - squareSizes[i] / 2;
     y[i] = height / 2 - squareSizes[i] / 2;
     // Generates random RGB values
@@ -49,6 +49,7 @@ function setup() {
 
 function draw() {
   background(0);
+
   // Get the elapsed time in milliseconds
   let elapsedTime = millis();
 
@@ -74,7 +75,7 @@ function draw() {
     vx[i] += ax[i];
     vy[i] += ay[i];
 
-    vx[i] *= 0.95;
+    vx[i] *= 0.99;
     vy[i] *= 0.99;
     // Limit the velocity to prevent the square from moving too fast
     //vx[i] = constrain(vx[i], -15, 15);
@@ -106,11 +107,33 @@ function draw() {
     for (let j = positions[i].length - 1; j >= 0; j--) {
       fill(r[i], g[i], b[i]);
       let pos = positions[i][j];
+      stroke(0, 0, 0, 255);
+      strokeWeight(1);
       rect(pos.x, pos.y, squareSizes[i], squareSizes[i]);
     }
 
     //console.log(x[i], y[i]);
   }
+
+  let amplitude = 100; // Height of the wave
+  let wavelength = 200; // Length of one cycle of the wave
+  let speed = 0.05; // Speed of the wave
+  let phase = frameCount * speed; // Use frameCount to animate
+
+  noFill();
+  stroke(255, 255, 255); // Sine wave color
+  strokeWeight(5); // Sine wave thickness
+  beginShape();
+  for (let x = 0; x < width; x++) {
+    let angle = (TWO_PI * x) / wavelength + phase;
+    let y = height / 2 + amplitude * sin(angle);
+    vertex(x, y);
+    let fps = frameRate();
+    fill(20);
+    stroke(255);
+    //console.log(y.toFixed(1));
+  }
+  endShape();
   let fps = frameRate();
   fill(255);
   stroke(0);
