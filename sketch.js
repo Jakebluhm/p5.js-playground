@@ -11,15 +11,16 @@ let vy = new Array(squares).fill(0); // Velocity in y-direction
 let ax = new Array(squares).fill(0); // Acceleration in x-direction
 let ay = new Array(squares).fill(0); // Acceleration in y-direction
 
-let trailLength = 10; // Number of trailing squares
+let trailLength = 3; // Number of trailing squares
 positions = new Array(squares);
 
-let xAccel = 5.0;
-let yAccel = 15.0;
-let accelDecayFactor = -11.0;
+let xAccel = 320.0;
+let yAccel = 600.0;
+let accelDecayFactor = -190.0;
 
 function setup() {
-  createCanvas(628, 1200);
+  createCanvas(1080, 1920);
+  background(0);
   // Initialize x and y to the center of the canvas
   //noStroke();
 
@@ -34,9 +35,11 @@ function setup() {
     x[i] = width / 2 - squareSizes[i] / 2;
     y[i] = height / 2 - squareSizes[i] / 2;
     // Generates random RGB values
-    r[i] = random(255); // Random red value between 0 and 255
-    g[i] = random(255); // Random green value between 0 and 255
-    b[i] = random(255); // Random blue value between 0 and 255
+    r[i] = random(0, 250); // Random red value between 0 and 255
+    g[i] = random(100, 150); // Random green value between 0 and 255
+    b[i] = random(0, 255); // Random blue value between 0 and 255
+
+    let randomizer = new Array(squares).fill(random());
 
     positions[i] = new Array(trailLength).fill({ x: width / 2, y: height / 2 });
   }
@@ -46,7 +49,6 @@ function setup() {
 
 function draw() {
   background(0);
-
   // Get the elapsed time in milliseconds
   let elapsedTime = millis();
 
@@ -54,12 +56,7 @@ function draw() {
   textAlign(CENTER);
   textSize(32);
   fill(255, 255, 255);
-  text(elapsedTime.toFixed(0) + " ms", width / 2, height / 2);
-
-  console.log(
-    -xAccel * Math.pow(Math.E, accelDecayFactor * (elapsedTime / 1000)),
-    yAccel * Math.pow(Math.E, accelDecayFactor * (elapsedTime / 1000))
-  );
+  //text(elapsedTime.toFixed(0) + " ms", width / 2, height / 2);
 
   let i = 0;
   for (i; i < squares; i++) {
@@ -77,9 +74,11 @@ function draw() {
     vx[i] += ax[i];
     vy[i] += ay[i];
 
+    vx[i] *= 0.99;
+    vy[i] *= 0.99;
     // Limit the velocity to prevent the square from moving too fast
-    vx[i] = constrain(vx[i], -15, 15);
-    vy[i] = constrain(vy[i], -15, 15);
+    //vx[i] = constrain(vx[i], -15, 15);
+    //vy[i] = constrain(vy[i], -15, 15);
 
     // Update position based on velocity
     x[i] += vx[i];
@@ -104,13 +103,16 @@ function draw() {
     positions[i] = positions[i].slice(0, trailLength);
 
     // Draw each position in the array as a square
-    for (let j = 0; j < positions[i].length; j++) {
-      let alpha = map(j, 0, positions[i].length, 255, 0);
-      fill(r[i], 100, b[i]);
+    for (let j = positions[i].length - 1; j >= 0; j--) {
+      fill(r[i], g[i], b[i]);
       let pos = positions[i][j];
-      square(pos.x, pos.y, squareSizes[i]);
+      rect(pos.x, pos.y, squareSizes[i], squareSizes[i]);
     }
 
     //console.log(x[i], y[i]);
   }
+  let fps = frameRate();
+  fill(255);
+  stroke(0);
+  text("FPS: " + fps.toFixed(2), 10, height - 10); // Display FPS rounded to 2 decimal places
 }
