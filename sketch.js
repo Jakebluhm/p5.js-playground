@@ -3,6 +3,7 @@ let squareSizes;
 let r;
 let g;
 let b;
+
 // Initialize the arrays for position, velocity, and acceleration
 let x;
 let y;
@@ -29,8 +30,6 @@ let sineWave = 0;
 function setup() {
   createCanvas(1080, 1920);
   background(0);
-  // Initialize x and y to the center of the canvas
-  //noStroke();
 
   squareSizes = new Array(squares);
   r = new Array(squares);
@@ -96,24 +95,9 @@ function draw() {
 
     vx[i] *= 0.99;
     vy[i] *= 0.99;
-    // Limit the velocity to prevent the square from moving too fast
-    //vx[i] = constrain(vx[i], -15, 15);
-    //vy[i] = constrain(vy[i], -15, 15);
-
     // Update position based on velocity
     x[i] += vx[i];
     y[i] += vy[i];
-
-    // Keep the square within the canvas boundaries
-    // x[i] = constrain(x[i], squareSizes[i] / 2, width - squareSizes[i] / 2);
-    // y[i] = constrain(y[i], squareSizes[i] / 2, height - squareSizes[i] / 2);
-
-    // Draw a square at position (x, y)
-    // rectMode(CENTER);
-    // strokeWeight(1);
-    // stroke(0, 0, 0, 255);
-    // fill(r[i], g[i], b[i]);
-    // rect(x[i], y[i], squareSizes[i], squareSizes[i]);
 
     //Current position of the square (for example, moving with the mouse)
     let _angle = sineWave + randomizer[i];
@@ -124,12 +108,8 @@ function draw() {
       x: x[i],
       y: 115 + y[i] + _y * Math.pow(Math.E, -0.4 * (elapsedTime / 750)),
     };
-    // } else {
-    //   currentPosition = { x: x[i] + _y - 2 * Amplitude, y: y[i] };
-    // }
 
     // Add the current position to the beginning of the array
-
     positions[i].unshift(currentPosition);
 
     // Keep only the latest 'trailLength' positions
@@ -150,7 +130,6 @@ function draw() {
       }
     }
 
-    //console.log(x[i], y[i]);
     loopCount++;
   }
 
